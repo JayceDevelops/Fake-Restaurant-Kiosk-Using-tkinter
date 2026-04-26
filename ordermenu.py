@@ -356,6 +356,22 @@ class OrderMenu:
          # Order Heading Change
          self._orderHeading.configure(background=Background, fg=self._colors['Background'])
 
+         # Changing Background When Button Is Clicked
+
+         # Menu Items
+         self._firstItem.configure(activebackground=Background)
+         self._secondItem.configure(activebackground=Background)
+         self._thirdItem.configure(activebackground=Background)
+         self._fourthItem.configure(activebackground=Background)
+         self._fifthItem.configure(activebackground=Background)
+         self._sixthItem.configure(activebackground=Background)
+
+         # Order Control
+         self._cancelOrder.configure(activebackground=Background)
+         self._placeOrder.configure(activebackground=Background)
+
+
+
       else:
          self._mode = 'dark'
          
@@ -389,6 +405,20 @@ class OrderMenu:
 
          # Order Heading Change
          self._orderHeading.configure(background=self._colors['Background'], fg='#FFF8E1')
+
+         # Changing Background When Button Is Clicked
+
+         # Menu Items
+         self._firstItem.configure(activebackground=self._colors['Background'])
+         self._secondItem.configure(activebackground=self._colors['Background'])
+         self._thirdItem.configure(activebackground=self._colors['Background'])
+         self._fourthItem.configure(activebackground=self._colors['Background'])
+         self._fifthItem.configure(activebackground=self._colors['Background'])
+         self._sixthItem.configure(activebackground=self._colors['Background'])
+
+         # Order Control
+         self._cancelOrder.configure(activebackground=self._colors['Background'])
+         self._placeOrder.configure(activebackground=self._colors['Background'])
    
    def generateBurgers(self):
       self._currentTab = 'burgers'
