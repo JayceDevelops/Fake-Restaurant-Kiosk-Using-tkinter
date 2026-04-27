@@ -426,6 +426,14 @@ class OrderMenu:
       self._fifthItemImage.configure(file='assets/sides/SamuraiPods.png')
       self._sixthItemImage.configure(file='assets/sides/NinjaSliders.png')
 
+      self._firstItem.configure(command=AddItemToOrder())
+      self._secondItem.configure(command=AddItemToOrder())
+      self._thirdItem.configure(command=AddItemToOrder())
+      self._fourthItem.configure(command=AddItemToOrder())
+      self._fifthItem.configure(command=AddItemToOrder())
+      self._sixthItem.configure(command=AddItemToOrder())
+
+
    def generateDrinks(self):
       self._currentTab = 'drinks'
       self._firstItemImage.configure(file='assets/drinks/TheSpear.png')
@@ -434,6 +442,13 @@ class OrderMenu:
       self._fourthItemImage.configure(file='assets/drinks/TheAxe.png')
       self._fifthItemImage.configure(file='assets/drinks/TheShield.png')
       self._sixthItemImage.configure(file='assets/drinks/ThePlume.png')
+
+      self._firstItem.configure(command=AddItemToOrder())
+      self._secondItem.configure(command=AddItemToOrder())
+      self._thirdItem.configure(command=AddItemToOrder())
+      self._fourthItem.configure(command=AddItemToOrder())
+      self._fifthItem.configure(command=AddItemToOrder())
+      self._sixthItem.configure(command=AddItemToOrder())
    
    def generateDesserts(self):
       self._currentTab = 'desserts'
@@ -444,20 +459,36 @@ class OrderMenu:
       self._fifthItemImage.configure(file='assets/desserts/CinnamonRolls.png')
       self._sixthItemImage.configure(file='assets/desserts/TheSunday.png')
 
-   def configureBurger(self, burgertype: str):
+      self._firstItem.configure(command=AddItemToOrder())
+      self._secondItem.configure(command=AddItemToOrder())
+      self._thirdItem.configure(command=AddItemToOrder())
+      self._fourthItem.configure(command=AddItemToOrder())
+      self._fifthItem.configure(command=AddItemToOrder())
+      self._sixthItem.configure(command=AddItemToOrder())
 
+   def configureBurger(self, burgertype: str):
+      
+      onions: bool = True
+      tomatos: bool = True
+      lettuce: bool = True
+      sauce: bool = True
+      
       self._burgerConfigWindow = tk.Tk()
 
       # Window Config
-      self._burgerConfigWindow.geometry("250x500")
+      self._burgerConfigWindow.geometry("250x520")
       self._burgerConfigWindow.title("")
       self._burgerConfigWindow.iconbitmap('assets/companyLogo.ico')
       self._burgerConfigWindow.resizable(False, False)
 
       if self._mode == 'dark':
-         self._burgerConfigWindow.configure(background=self._colors['Background'])
+         photoPath: str = 'assets/darkmode/'
+         Background = self._colors['Background']
+         self._burgerConfigWindow.configure(background=Background)
       else: 
-         self._burgerConfigWindow.configure(background='#FFF8E1')
+         photoPath: str = 'assets/lightmode/'
+         Background = '#FFF8E1'
+         self._burgerConfigWindow.configure(background=Background)
 
       
       # Burger Image 
@@ -467,13 +498,117 @@ class OrderMenu:
          image=self._burgerImage,
          height = 225,
          width = 210,
-         activebackground = self._colors['Background'],
-         highlightthickness = 0,
-         borderwidth = 0
+         border = 0
       )
       self._burgerItem.grid(row = 0, sticky='w', padx=(20, 0), pady=(10, 0))
 
+      self._onionsImage: tk.PhotoImage = tk.PhotoImage(file=f'{photoPath}CheckedOnions.png', master=self._burgerConfigWindow)
+      self._onions: tk.Button = tk.Button(
+         self._burgerConfigWindow, 
+         width = 205,
+         height = 40,
+         image = self._onionsImage,
+         activebackground = Background,
+         highlightthickness = 0,
+         borderwidth = 0,
+          command=changeItemChecked("onions", photoPath)
+      )
+      self._onions.grid(row=1, sticky='w', padx=(20, 0), pady=(20, 0))
+
+      self._tomatosImage: tk.PhotoImage = tk.PhotoImage(file=f'{photoPath}CheckedTomatos.png', master=self._burgerConfigWindow)
+      self._tomatos: tk.Button = tk.Button(
+         self._burgerConfigWindow, 
+         width = 205,
+         height = 40,
+         image = self._tomatosImage,
+         activebackground = Background,
+         highlightthickness = 0,
+         borderwidth = 0,
+          command=changeItemChecked("tomatos", photoPath)
+      )
+      self._tomatos.grid(row=2, sticky='w', padx=(20, 0), pady=(10, 0))
+
+      self._lettuceImage: tk.PhotoImage = tk.PhotoImage(file=f'{photoPath}CheckedLettuce.png', master=self._burgerConfigWindow)
+      self._lettuce: tk.Button = tk.Button(
+         self._burgerConfigWindow, 
+         width = 205,
+         height = 40,
+         image = self._lettuceImage,
+         activebackground = Background,
+         highlightthickness = 0,
+         borderwidth = 0,
+          command=changeItemChecked("lettuce", photoPath)
+      )
+      self._lettuce.grid(row=3, sticky='w', padx=(20, 0), pady=(10, 0))
+
+      self._sauceImage: tk.PhotoImage = tk.PhotoImage(file=f'{photoPath}CheckedSauce.png', master=self._burgerConfigWindow)
+      self._sauce: tk.Button = tk.Button(
+         self._burgerConfigWindow, 
+         width = 205,
+         height = 40,
+         image = self._sauceImage,
+         activebackground = Background,
+         highlightthickness = 0,
+         borderwidth = 0,
+          command=changeItemChecked("sauce", photoPath)
+      )
+      self._sauce.grid(row=4, sticky='w', padx=(20, 0), pady=(10, 0))
+
+      self._cancelImage: tk.PhotoImage = tk.PhotoImage(file='assets/CancelItem.png', master=self._burgerConfigWindow)
+      self._cancelItem: tk.Button = tk.Button(
+         self._burgerConfigWindow, 
+         width = 92,
+         height = 40,
+         background='#FFF8E1',
+         image = self._cancelImage,
+         activebackground = Background,
+         highlightthickness = 0,
+         borderwidth = 0,
+      )
+      self._cancelItem.grid(row=5, sticky='w', padx=(20, 0), pady=(10, 0))
+
+      self._addToOrderImage: tk.PhotoImage = tk.PhotoImage(file='assets/AddItem.png', master=self._burgerConfigWindow)
+      self._addToOrder: tk.Button = tk.Button(
+         self._burgerConfigWindow, 
+         width = 92,
+         height = 40,
+         background='#FFF8E1',
+         image = self._addToOrderImage,
+         activebackground = Background,
+         highlightthickness = 0,
+         borderwidth = 0
+      )
+      self._addToOrder.grid(row=5, sticky='w', padx=(130, 0), pady=(10, 0))
+
+      def changeItemChecked(self, item: str, path: str):
+         match item:
+            case "onions":
+               if onions:
+                  self._onionsImage.configure(file=f'{path}Onions.png')
+               else:
+                  self._onionsImage.configure(file=f'{path}CheckedOnions.png')
+            
+            case "tomatos":
+               if tomatos:
+                  self._onionsImage.configure(file=f'{path}Tomatos.png')
+               else:
+                  self._onionsImage.configure(file=f'{path}CheckedTomatos.png')
+            
+            case "lettuce":
+               if lettuce:
+                  self._onionsImage.configure(file=f'{path}Lettuce.png')
+               else:
+                  self._onionsImage.configure(file=f'{path}CheckedLettuce.png')
+
+            case "sauce":
+               if sauce:
+                  self._onionsImage.configure(file=f'{path}Sauce.png')
+               else:
+                  self._onionsImage.configure(file=f'{path}CheckedSauce.png')
+
       self._burgerConfigWindow.mainloop()
+
+
 
       
 
