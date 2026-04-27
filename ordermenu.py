@@ -1,5 +1,6 @@
 import tkinter as tk
 from tkinter import messagebox
+from datetime import datetime
 
 # ITEMS MADE USING AI (GEMINI):
 # Company Logo 
@@ -33,7 +34,7 @@ class OrderMenu:
          "Ninja Black Bean Sliders": 8.99,
          "Samurai Edamame Pods": 5.99,
          "Spartan Fries": 4.99,
-         "trojan Truffle Tots": 7.99,
+         "Trojan Truffle Tots": 7.99,
          "Viking Sriracha Slaw": 6.99,
          
          # Drinks
@@ -53,9 +54,11 @@ class OrderMenu:
          "The Banner Sunday": 12.99
       }
 
-      self._order: str = ""
+      self._orderCount = 0
       self._orderTotal: float = 0.0
-      self._orderItemRow = 2
+      self._orderItemCount = 0
+      self._order = ""
+     
 
       # Window
       self._window = tk.Tk()
@@ -247,7 +250,8 @@ class OrderMenu:
          height = 80,
          activebackground = self._colors['Background'],
          highlightthickness = 0,
-         borderwidth = 0
+         borderwidth = 0,
+         command = lambda: self.cancelOrder()
       )
       self._cancelOrder.grid(row=2, sticky='w', padx=(15, 0), pady=(10, 0))
       
@@ -261,7 +265,8 @@ class OrderMenu:
          height = 80,
          activebackground = self._colors['Background'],
          highlightthickness = 0,
-         borderwidth = 0
+         borderwidth = 0,
+         command = lambda: self.placeOrder()
       )
       self._placeOrder.grid(row=2, sticky='w', padx=(975, 0), pady=(10, 0))
 
@@ -346,6 +351,52 @@ class OrderMenu:
       self._sixthItem.grid(row = 1, sticky='w', padx=(730, 0), pady=(240, 0))
 
    # Button Functions
+
+   def addItemToOrder(self, itemName):
+      if self._orderItemCount + 1 <= 23:
+         self._orderItemCount += 1
+
+         if self._mode == 'light':
+            Background = '#FFF8E1'
+            Forground = self._colors['Background']
+         else:
+            Background = self._colors['Background']
+            Forground = '#FFF8E1'
+
+         newOrder: str = f'{itemName} x 1  ${self._itemsPrice[itemName]}'
+         self._order += '\n' + newOrder
+         self._orderTotal += self._itemsPrice[itemName]
+
+         self._item: tk.Label = tk.Label(
+            self._window,
+            text = self._order,
+            width = 32,
+            height = 24,
+            font = ('Ariel', 10, 'bold'),
+            justify='left',
+            anchor='nw',
+            foreground= Forground,
+            background = Background
+         )
+         self._item.grid(row=1, padx=(979, 0), pady=(0, 0) ,sticky='w')
+
+         self._price: tk.Label = tk.Label(
+            self._window,
+            text = f'Total: ${self._orderTotal:.2f}',
+            width = 15,
+            height = 1,
+            font = ('Ariel', 10, 'bold'),
+            justify='left',
+            anchor='w',
+            foreground= Forground,
+            background = Background
+         )
+         self._price.grid(row=1, padx=(979, 0), pady=(425, 0) ,sticky='w')
+      else:
+         messagebox.showerror("Order Item Count Error", "You may not have more then 23 unique items on your order. Please place your order and start another. Sorry for the inconvience.")
+
+
+
    def lightingModeChange(self):
 
       if self._mode == 'dark':
@@ -400,6 +451,13 @@ class OrderMenu:
          # Order Control
          self._cancelOrder.configure(activebackground=Background)
          self._placeOrder.configure(activebackground=Background)
+         
+         # Item Label
+         self._item.configure(foreground=self._colors['Background'], background = Background)
+
+         # Total Label
+         self._price.configure(background=Background, foreground=self._colors['Background'])
+         
       else:
          self._mode = 'dark'
          
@@ -447,6 +505,12 @@ class OrderMenu:
          # Order Control
          self._cancelOrder.configure(activebackground=self._colors['Background'])
          self._placeOrder.configure(activebackground=self._colors['Background'])
+
+         # Item Label
+         self._item.configure(foreground='#FFF8E1', background = self._colors['Background'])
+
+         # Total Label
+         self._price.configure(background=self._colors['Background'], foreground='#FFF8E1')
    
    def generateBurgers(self):
       self._currentTab = 'burgers'
@@ -503,7 +567,7 @@ class OrderMenu:
       self._secondItem.configure(command=lambda: self.addItemToOrder("The Trophy Brownie"))
       self._thirdItem.configure(command=lambda: self.addItemToOrder("The Victory Cake"))
       self._fourthItem.configure(command=lambda: self.addItemToOrder("The Valhalla Lava Cake"))
-      self._fifthItem.configure(command=lambda: self.addItemToOrder("viking Cinnamon Rolls"))
+      self._fifthItem.configure(command=lambda: self.addItemToOrder("Viking Cinnamon Rolls"))
       self._sixthItem.configure(command=lambda: self.addItemToOrder("The Banner Sunday"))
 
    def configureBurger(self, burgertype: str):
@@ -721,22 +785,45 @@ class OrderMenu:
 
 
       self._burgerConfigWindow.mainloop()
-   
-   def addItemToOrder(self, itemName):
-      self._item: tk.Label = tk.Label(
-         self._window,
-         text = f'{itemName} x 1  ${self._itemsPrice[itemName]}',
-         width = 30,
-         height = 1,
-         font = ('Ariel', 10, 'bold')
-      )
-      self._item.grid(row=1, padx=(10, 0), sticky='w')
 
    def cancelItem(self):
       response = messagebox.askyesno("Cancel", "Are you sure you want to cancel?")
 
       if response:
          self._burgerConfigWindow.destroy()
+   
+   def cancelOrder(self):
+      response = messagebox.askyesno("Cancel Order", "Are you sure you want to cancel this order and start over?")
+
+      if response:
+         self._order = ""
+         self._item.configure(text=self._order)
+
+         self._orderTotal = 0
+         self._price.configure(text=f'Total: ${self._orderTotal:.2f}')
+
+   def placeOrder(self):
+      self._orderCount += 1
+
+      now = datetime.now()
+      self._dayandtime = now.strftime('%d/%m/%Y %H:%M:%S')
+
+      self._order: str = f'### Order {self._orderCount} @ {str(self._dayandtime)} ###{self._order}\n\n'
+ 
+      with open('orders.txt', 'a') as file:
+         file.write(self._order)
+      
+      self._order = ""
+      self._item.configure(text=self._order)
+
+      self._orderTotal = 0
+      self._price.configure(text=f'Total: ${self._orderTotal:.2f}')
+
+      self._orderItemCount = 0
+
+      
+
+      
 
 
       
