@@ -2,10 +2,15 @@ import tkinter as tk
 from tkinter import messagebox
 from datetime import datetime
 
-# ITEMS MADE USING AI (GEMINI):
-# Company Logo 
-# Pictures Of Food, description, and price
-#
+### ITEMS MADE USING AI (GEMINI) ###
+#   1. Resturant Logo (CompanyLogo.ico) 
+#   2. Picture Of Burgers, Fries, Drinks, and Desserts. It only made a picture of the food itself, I made the holder that the foods price and description is in. 
+#   3. Fake descriptions and prices for the food. 
+#   4. Partial App layout such as where buttons should be places for a minimalist design
+#################################
+
+# EVERYTHING ELSE WAS DESIGNED AND IMPLEMENTED BY ME. 
+
 class OrderMenu:
    
    def __init__(self):
@@ -272,7 +277,7 @@ class OrderMenu:
 
    def menuItems(self): 
       
-      self._firstItemImage: tk.PhotoImage = tk.PhotoImage(file='assets/burgers/TheSpartan.png')
+      self._firstItemImage: tk.PhotoImage = tk.PhotoImage(file='assets/burgers/The Spartan.png')
       self._firstItem: tk.Button = tk.Button(
          self._window, 
          image=self._firstItemImage,
@@ -281,11 +286,11 @@ class OrderMenu:
          activebackground = self._colors['Background'],
          highlightthickness = 0,
          borderwidth = 0,
-         command = lambda: self.configureBurger("TheSpartan")
+         command = lambda: self.configureBurger("The Spartan")
       )
       self._firstItem.grid(row = 1, sticky='w', padx=(230, 0), pady=(0, 240))
 
-      self._secondItemImage: tk.PhotoImage = tk.PhotoImage(file='assets/burgers/TheViking.png')
+      self._secondItemImage: tk.PhotoImage = tk.PhotoImage(file='assets/burgers/The Viking.png')
       self._secondItem: tk.Button = tk.Button(
          self._window, 
          image=self._secondItemImage,
@@ -294,11 +299,11 @@ class OrderMenu:
          activebackground = self._colors['Background'],
          highlightthickness = 0,
          borderwidth = 0,
-         command = lambda: self.configureBurger("TheViking")
+         command = lambda: self.configureBurger("The Viking")
       )
       self._secondItem.grid(row = 1, sticky='w', padx=(480, 0), pady=(0, 240))
 
-      self._thirdItemImage: tk.PhotoImage = tk.PhotoImage(file='assets/burgers/TheTrojan.png')
+      self._thirdItemImage: tk.PhotoImage = tk.PhotoImage(file='assets/burgers/The Trojan.png')
       self._thirdItem: tk.Button = tk.Button(
          self._window, 
          image=self._thirdItemImage,
@@ -307,11 +312,11 @@ class OrderMenu:
          activebackground = self._colors['Background'],
          highlightthickness = 0,
          borderwidth = 0,
-         command = lambda: self.configureBurger("TheTrojan")
+         command = lambda: self.configureBurger("The Trojan")
       )
       self._thirdItem.grid(row = 1, sticky='w', padx=(730, 0), pady=(0, 240))
 
-      self._fourthItemImage: tk.PhotoImage = tk.PhotoImage(file='assets/burgers/TheAmazon.png')
+      self._fourthItemImage: tk.PhotoImage = tk.PhotoImage(file='assets/burgers/The Amazon.png')
       self._fourthItem: tk.Button = tk.Button(
          self._window, 
          image=self._fourthItemImage,
@@ -320,11 +325,11 @@ class OrderMenu:
          activebackground = self._colors['Background'],
          highlightthickness = 0,
          borderwidth = 0,
-         command = lambda: self.configureBurger("TheAmazon")
+         command = lambda: self.configureBurger("The Amazon")
       )
       self._fourthItem.grid(row = 1, sticky='w', padx=(230, 0), pady=(240, 0))
 
-      self._fifthItemImage: tk.PhotoImage = tk.PhotoImage(file='assets/burgers/TheSamurai.png')
+      self._fifthItemImage: tk.PhotoImage = tk.PhotoImage(file='assets/burgers/The Samurai.png')
       self._fifthItem: tk.Button = tk.Button(
          self._window, 
          image=self._fifthItemImage,
@@ -333,11 +338,11 @@ class OrderMenu:
          activebackground = self._colors['Background'],
          highlightthickness = 0,
          borderwidth = 0,
-         command = lambda: self.configureBurger("TheSamurai")
+         command = lambda: self.configureBurger("The Samurai")
       )
       self._fifthItem.grid(row = 1, sticky='w', padx=(480, 0), pady=(240, 0))
 
-      self._sixthItemImage: tk.PhotoImage = tk.PhotoImage(file='assets/burgers/TheNinja.png')
+      self._sixthItemImage: tk.PhotoImage = tk.PhotoImage(file='assets/burgers/The Ninja.png')
       self._sixthItem: tk.Button = tk.Button(
          self._window, 
          image=self._sixthItemImage,
@@ -346,16 +351,15 @@ class OrderMenu:
          activebackground = self._colors['Background'],
          highlightthickness = 0,
          borderwidth = 0,
-         command = lambda: self.configureBurger("TheNinja")
+         command = lambda: self.configureBurger("The Ninja")
       )
       self._sixthItem.grid(row = 1, sticky='w', padx=(730, 0), pady=(240, 0))
 
    # Button Functions
 
-   def addItemToOrder(self, itemName):
+   def addItemToOrder(self, itemName, wants = '', itemCount = 1):
       if self._orderItemCount + 1 <= 23:
          self._orderItemCount += 1
-
          if self._mode == 'light':
             Background = '#FFF8E1'
             Forground = self._colors['Background']
@@ -363,9 +367,18 @@ class OrderMenu:
             Background = self._colors['Background']
             Forground = '#FFF8E1'
 
-         newOrder: str = f'{itemName} x 1  ${self._itemsPrice[itemName]}'
+         if itemName == 'The Amazon' or itemName == 'The Ninja' or itemName == 'The Samurai' or itemName == 'The Spartan' or itemName == 'The Trojan' or itemName == 'The Viking':
+            newOrder = f'{itemName} x {itemCount}     ${self._itemsPrice[itemName] * itemCount}'
+            
+            if 'o' in wants: newOrder += f'\n Onions|'
+            if 'l' in wants: newOrder += f'Lettuce|'
+            if 't' in wants: newOrder += f'Tomato|'
+            if 's' in wants: newOrder += f'Sauce'
+         else:
+            newOrder: str = f'{itemName} x 1     ${self._itemsPrice[itemName]}'
+
          self._order += '\n' + newOrder
-         self._orderTotal += self._itemsPrice[itemName]
+         self._orderTotal += self._itemsPrice[itemName] * itemCount
 
          self._item: tk.Label = tk.Label(
             self._window,
@@ -514,12 +527,21 @@ class OrderMenu:
    
    def generateBurgers(self):
       self._currentTab = 'burgers'
-      self._firstItemImage.configure(file='assets/burgers/TheSpartan.png')
-      self._secondItemImage.configure(file='assets/burgers/TheTrojan.png')
-      self._thirdItemImage.configure(file='assets/burgers/TheViking.png')
-      self._fourthItemImage.configure(file='assets/burgers/TheAmazon.png')
-      self._fifthItemImage.configure(file='assets/burgers/TheSamurai.png')
-      self._sixthItemImage.configure(file='assets/burgers/TheNinja.png')
+      self._firstItemImage.configure(file='assets/burgers/The Spartan.png')
+      self._secondItemImage.configure(file='assets/burgers/The Trojan.png')
+      self._thirdItemImage.configure(file='assets/burgers/The Viking.png')
+      self._fourthItemImage.configure(file='assets/burgers/The Amazon.png')
+      self._fifthItemImage.configure(file='assets/burgers/The Samurai.png')
+      self._sixthItemImage.configure(file='assets/burgers/The Ninja.png')
+
+      self._firstItem.configure(command= lambda: self.configureBurger("The Spartan"))
+      self._secondItem.configure(command=lambda: self.configureBurger("The Trojan"))
+      self._thirdItem.configure(command=lambda: self.configureBurger("The Viking"))
+      self._fourthItem.configure(command=lambda: self.configureBurger("The Amazon"))
+      self._fifthItem.configure(command=lambda: self.configureBurger("The Samurai"))
+      self._sixthItem.configure(command=lambda: self.configureBurger("The Ninja"))
+
+
 
    def generateSides(self):
       self._currentTab = 'sides'
@@ -731,7 +753,8 @@ class OrderMenu:
          image = self._addToOrderImage,
          activebackground = Background,
          highlightthickness = 0,
-         borderwidth = 0
+         borderwidth = 0,
+         command = lambda: self.addBurgerToOrder(burgertype, self._itemCount)
       )
       self._addToOrder.grid(row=6, sticky='w', padx=(133, 0), pady=(10, 0))
 
@@ -786,6 +809,25 @@ class OrderMenu:
 
       self._burgerConfigWindow.mainloop()
 
+   def addBurgerToOrder(self, burgerName, burgerCount):
+      order = ''
+
+      if self._onions:
+         order += 'o'
+      
+      if self._tomatos:
+         order += 't'
+
+      if self._lettuce:
+         order += 'l'
+      
+      if self._sauce:
+         order += 's'
+
+      self._burgerConfigWindow.destroy()
+      self.addItemToOrder(burgerName, order, burgerCount)
+      
+
    def cancelItem(self):
       response = messagebox.askyesno("Cancel", "Are you sure you want to cancel?")
 
@@ -820,16 +862,6 @@ class OrderMenu:
       self._price.configure(text=f'Total: ${self._orderTotal:.2f}')
 
       self._orderItemCount = 0
-
-      
-
-      
-
-
-      
-
-      
-   
 
 
 def main():
