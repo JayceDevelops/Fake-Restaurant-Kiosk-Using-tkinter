@@ -2,13 +2,12 @@ import tkinter as tk
 
 # ITEMS MADE USING AI (GEMINI):
 # Company Logo 
-# Pictures Of Burgers, description, and price
+# Pictures Of Food, description, and price
 #
 class OrderMenu:
    
    def __init__(self):
       self._mode = 'dark'
-      self._currentTab = 'burgers'
       self._photoPath = 'assets/darkmode/'
       self._colors: dict = {
          'Background': '#1A1A1A',
@@ -204,7 +203,6 @@ class OrderMenu:
          self._window,
          background = self._colors['Secondary'],
          image = self._cancelOrderImage,
-         text = "Place Order",
          width = 180,
          height = 80,
          activebackground = self._colors['Background'],
@@ -219,7 +217,6 @@ class OrderMenu:
          self._window,
          background = self._colors['Secondary'],
          image = self._placeOrderImage,
-         text = "Place Order",
          width = 270,
          height = 80,
          activebackground = self._colors['Background'],
@@ -233,84 +230,78 @@ class OrderMenu:
       self._firstItemImage: tk.PhotoImage = tk.PhotoImage(file='assets/burgers/TheSpartan.png')
       self._firstItem: tk.Button = tk.Button(
          self._window, 
-         text = "burger",
          image=self._firstItemImage,
          height = 225,
          width = 210,
-         background='green',
          activebackground = self._colors['Background'],
          highlightthickness = 0,
-         borderwidth = 0
+         borderwidth = 0,
+         command = lambda: self.configureBurger("TheSpartan")
       )
       self._firstItem.grid(row = 1, sticky='w', padx=(230, 0), pady=(0, 240))
 
       self._secondItemImage: tk.PhotoImage = tk.PhotoImage(file='assets/burgers/TheViking.png')
       self._secondItem: tk.Button = tk.Button(
          self._window, 
-         text = "burger",
          image=self._secondItemImage,
          height = 225,
          width = 210,
-         background='green',
          activebackground = self._colors['Background'],
          highlightthickness = 0,
-         borderwidth = 0
+         borderwidth = 0,
+         command = lambda: self.configureBurger("TheViking")
       )
       self._secondItem.grid(row = 1, sticky='w', padx=(480, 0), pady=(0, 240))
 
       self._thirdItemImage: tk.PhotoImage = tk.PhotoImage(file='assets/burgers/TheTrojan.png')
       self._thirdItem: tk.Button = tk.Button(
          self._window, 
-         text = "burger",
          image=self._thirdItemImage,
          height = 225,
          width = 210,
-         background='green',
          activebackground = self._colors['Background'],
          highlightthickness = 0,
-         borderwidth = 0
+         borderwidth = 0,
+         command = lambda: self.configureBurger("TheTrojan")
       )
       self._thirdItem.grid(row = 1, sticky='w', padx=(730, 0), pady=(0, 240))
 
       self._fourthItemImage: tk.PhotoImage = tk.PhotoImage(file='assets/burgers/TheAmazon.png')
       self._fourthItem: tk.Button = tk.Button(
          self._window, 
-         text = "burger",
          image=self._fourthItemImage,
          height = 225,
          width = 210,
-         background='green',
          activebackground = self._colors['Background'],
          highlightthickness = 0,
-         borderwidth = 0
+         borderwidth = 0,
+         command = lambda: self.configureBurger("TheAmazon")
       )
       self._fourthItem.grid(row = 1, sticky='w', padx=(230, 0), pady=(240, 0))
 
       self._fifthItemImage: tk.PhotoImage = tk.PhotoImage(file='assets/burgers/TheSamurai.png')
       self._fifthItem: tk.Button = tk.Button(
          self._window, 
-         text = "burger",
          image=self._fifthItemImage,
          height = 225,
          width = 210,
-         background='green',
          activebackground = self._colors['Background'],
          highlightthickness = 0,
-         borderwidth = 0
+         borderwidth = 0,
+         command = lambda: self.configureBurger("TheSamurai")
       )
       self._fifthItem.grid(row = 1, sticky='w', padx=(480, 0), pady=(240, 0))
 
       self._sixthItemImage: tk.PhotoImage = tk.PhotoImage(file='assets/burgers/TheNinja.png')
       self._sixthItem: tk.Button = tk.Button(
          self._window, 
-         text = "burger",
          image=self._sixthItemImage,
          height = 225,
          width = 210,
-         background='green',
          activebackground = self._colors['Background'],
          highlightthickness = 0,
-         borderwidth = 0
+         borderwidth = 0,
+         command = lambda: self.configureBurger("TheNinja")
       )
       self._sixthItem.grid(row = 1, sticky='w', padx=(730, 0), pady=(240, 0))
 
@@ -369,9 +360,6 @@ class OrderMenu:
          # Order Control
          self._cancelOrder.configure(activebackground=Background)
          self._placeOrder.configure(activebackground=Background)
-
-
-
       else:
          self._mode = 'dark'
          
@@ -455,6 +443,41 @@ class OrderMenu:
       self._fourthItemImage.configure(file='assets/desserts/LavaCake.png')
       self._fifthItemImage.configure(file='assets/desserts/CinnamonRolls.png')
       self._sixthItemImage.configure(file='assets/desserts/TheSunday.png')
+
+   def configureBurger(self, burgertype: str):
+
+      self._burgerConfigWindow = tk.Tk()
+
+      # Window Config
+      self._burgerConfigWindow.geometry("250x500")
+      self._burgerConfigWindow.title("")
+      self._burgerConfigWindow.iconbitmap('assets/companyLogo.ico')
+      self._burgerConfigWindow.resizable(False, False)
+
+      if self._mode == 'dark':
+         self._burgerConfigWindow.configure(background=self._colors['Background'])
+      else: 
+         self._burgerConfigWindow.configure(background='#FFF8E1')
+
+      
+      # Burger Image 
+      self._burgerImage: tk.PhotoImage = tk.PhotoImage(file=f'assets/burgers/{burgertype}.png', master=self._burgerConfigWindow)
+      self._burgerItem: tk.Label = tk.Label(
+         self._burgerConfigWindow, 
+         image=self._burgerImage,
+         height = 225,
+         width = 210,
+         activebackground = self._colors['Background'],
+         highlightthickness = 0,
+         borderwidth = 0
+      )
+      self._burgerItem.grid(row = 0, sticky='w', padx=(20, 0), pady=(10, 0))
+
+      self._burgerConfigWindow.mainloop()
+
+      
+
+      
    
 
 
