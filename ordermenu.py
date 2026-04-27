@@ -844,6 +844,8 @@ class OrderMenu:
          self._orderTotal = 0
          self._price.configure(text=f'Total: ${self._orderTotal:.2f}')
 
+         self._orderItemCount = 0
+
    def placeOrder(self):
       self._orderCount += 1
 
