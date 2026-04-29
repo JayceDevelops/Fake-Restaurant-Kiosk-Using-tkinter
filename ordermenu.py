@@ -6,7 +6,7 @@ from datetime import datetime
 #   1. Resturant Logo (CompanyLogo.ico) 
 #   2. Picture Of Burgers, Fries, Drinks, and Desserts. It only made a picture of the food itself, I made the holder that the foods price and description is in. 
 #   3. Fake descriptions and prices for the food. 
-#   4. Partial App layout such as where buttons should be places for a minimalist design
+#   4. Partial App layout such as where buttons should be placed for a minimalist design
 #################################
 
 # EVERYTHING ELSE WAS DESIGNED AND IMPLEMENTED BY ME. 
@@ -15,7 +15,7 @@ class OrderMenu:
    
    def __init__(self):
       self._mode = 'dark'
-      self._photoPath = 'assets/darkmode/'
+      self._photoPath = 'assets/darkmode/' 
       self._colors: dict = {
          'Background': '#1A1A1A',
          'Primary':  '#D4AF37',
@@ -59,10 +59,16 @@ class OrderMenu:
          "The Banner Sunday": 12.99
       }
 
+      # Number tracking how many orders have been logged
       self._orderCount = 0
+
       self._orderTotal: float = 0.0
+
+      # Number making sure the item count of a order does not exceed 23
       self._orderItemCount = 0
+
       self._order = ""
+      self._itemWindowOpen = False
      
 
       # Window
@@ -96,11 +102,6 @@ class OrderMenu:
       self._window.rowconfigure(0)
       self._window.rowconfigure(1)
       self._window.rowconfigure(2)
-
-      # Columns
-      #self._window.columnconfigure(0)
-      #self._window.columnconfigure(1)
-      #self._window.columnconfigure(2)
 
       # Window Color & Resizeability
       self._window.configure(background=self._colors['Background'])
@@ -275,6 +276,7 @@ class OrderMenu:
       )
       self._placeOrder.grid(row=2, sticky='w', padx=(975, 0), pady=(10, 0))
 
+   # Menu Item Buttons
    def menuItems(self): 
       
       self._firstItemImage: tk.PhotoImage = tk.PhotoImage(file='assets/burgers/The Spartan.png')
@@ -357,6 +359,7 @@ class OrderMenu:
 
    # Button Functions
 
+   # Function used to add items in the order section
    def addItemToOrder(self, itemName, wants = '', itemCount = 1):
       if self._orderItemCount + 1 <= 23:
          self._orderItemCount += 1
@@ -370,10 +373,12 @@ class OrderMenu:
          if itemName == 'The Amazon' or itemName == 'The Ninja' or itemName == 'The Samurai' or itemName == 'The Spartan' or itemName == 'The Trojan' or itemName == 'The Viking':
             newOrder = f'{itemName} x {itemCount}     ${self._itemsPrice[itemName] * itemCount}'
             
-            if 'o' in wants: newOrder += f'\n Onions|'
-            if 'l' in wants: newOrder += f'Lettuce|'
-            if 't' in wants: newOrder += f'Tomato|'
-            if 's' in wants: newOrder += f'Sauce'
+            if 'o' in wants or 'l' in wants or 't' in wants or 's' in wants:
+               newOrder += '\n  '
+               if 'o' in wants: newOrder += f'Onions '
+               if 'l' in wants: newOrder += f'Lettuce '
+               if 't' in wants: newOrder += f'Tomato '
+               if 's' in wants: newOrder += f'Sauce'
          else:
             newOrder: str = f'{itemName} x 1     ${self._itemsPrice[itemName]}'
 
@@ -409,7 +414,7 @@ class OrderMenu:
          messagebox.showerror("Order Item Count Error", "You may not have more then 23 unique items on your order. Please place your order and start another. Sorry for the inconvience.")
 
 
-
+   # Function used for the light mode button
    def lightingModeChange(self):
 
       if self._mode == 'dark':
@@ -525,6 +530,7 @@ class OrderMenu:
          # Total Label
          self._price.configure(background=self._colors['Background'], foreground='#FFF8E1')
    
+   # Changes the images and functions when burgers button is pressed
    def generateBurgers(self):
       self._currentTab = 'burgers'
       self._firstItemImage.configure(file='assets/burgers/The Spartan.png')
@@ -542,7 +548,7 @@ class OrderMenu:
       self._sixthItem.configure(command=lambda: self.configureBurger("The Ninja"))
 
 
-
+   # Changes the images and functions when sides button is pressed
    def generateSides(self):
       self._currentTab = 'sides'
       self._firstItemImage.configure(file='assets/sides/SpartanFries.png')
@@ -559,7 +565,7 @@ class OrderMenu:
       self._fifthItem.configure(command=lambda: self.addItemToOrder("Samurai Edamame Pods"))
       self._sixthItem.configure(command=lambda: self.addItemToOrder("Ninja Black Bean Sliders"))
 
-
+   # Changes the images and functions when drinks button is pressed
    def generateDrinks(self):
       self._currentTab = 'drinks'
       self._firstItemImage.configure(file='assets/drinks/TheSpear.png')
@@ -576,6 +582,7 @@ class OrderMenu:
       self._fifthItem.configure(command=lambda: self.addItemToOrder("The Shield"))
       self._sixthItem.configure(command=lambda: self.addItemToOrder("The Plume"))
    
+   # Changes the images and functions when desserts button is pressed
    def generateDesserts(self):
       self._currentTab = 'desserts'
       self._firstItemImage.configure(file='assets/desserts/SpartanCheesecake.png')
@@ -594,221 +601,234 @@ class OrderMenu:
 
    def configureBurger(self, burgertype: str):
       
-      self._onions: bool = True
-      self._tomatos: bool = True
-      self._lettuce: bool = True
-      self._sauce: bool = True
+      if not self._itemWindowOpen:
+         self._itemWindowOpen = True
+         self._onions: bool = True
+         self._tomatos: bool = True
+         self._lettuce: bool = True
+         self._sauce: bool = True
 
-      self._itemCount = 1
+         self._itemCount = 1
+         
+         self._burgerConfigWindow = tk.Tk()
+
+         # Window Config
+         self._burgerConfigWindow.geometry("250x550")
+         self._burgerConfigWindow.title("")
+         self._burgerConfigWindow.iconbitmap('assets/companyLogo.ico')
+         self._burgerConfigWindow.resizable(False, False)
+
+         if self._mode == 'dark':
+            photoPath: str = 'assets/darkmode/'
+            Background = self._colors['Background']
+            self._burgerConfigWindow.configure(background=Background)
+         else: 
+            photoPath: str = 'assets/lightmode/'
+            Background = '#FFF8E1'
+            self._burgerConfigWindow.configure(background=Background)
+
+         
+         # Burger
+         self._burgerImage: tk.PhotoImage = tk.PhotoImage(file=f'assets/burgers/{burgertype}.png', master=self._burgerConfigWindow)
+         self._burgerItem: tk.Label = tk.Label(
+            self._burgerConfigWindow, 
+            image=self._burgerImage,
+            height = 225,
+            width = 210,
+            border = 0
+         )
+         self._burgerItem.grid(row = 0, sticky='w', padx=(20, 0), pady=(10, 0))
+         
+         # Onions
+         self._onionsImage: tk.PhotoImage = tk.PhotoImage(file=f'{photoPath}CheckedOnions.png', master=self._burgerConfigWindow)
+         self._onions: tk.Button = tk.Button(
+            self._burgerConfigWindow, 
+            width = 205,
+            height = 40,
+            image = self._onionsImage,
+            activebackground = Background,
+            highlightthickness = 0,
+            borderwidth = 0,
+            command= lambda: changeItemChecked("onions", photoPath)
+         )
+         self._onions.grid(row=1, sticky='w', padx=(20, 0), pady=(20, 0))
+
+         # Tomatos
+         self._tomatosImage: tk.PhotoImage = tk.PhotoImage(file=f'{photoPath}CheckedTomatos.png', master=self._burgerConfigWindow)
+         self._tomatos: tk.Button = tk.Button(
+            self._burgerConfigWindow, 
+            width = 205,
+            height = 40,
+            image = self._tomatosImage,
+            activebackground = Background,
+            highlightthickness = 0,
+            borderwidth = 0,
+            command= lambda: changeItemChecked("tomatos", photoPath)
+         )
+         self._tomatos.grid(row=2, sticky='w', padx=(20, 0), pady=(10, 0))
+
+         # Lettuce
+         self._lettuceImage: tk.PhotoImage = tk.PhotoImage(file=f'{photoPath}CheckedLettuce.png', master=self._burgerConfigWindow)
+         self._lettuce: tk.Button = tk.Button(
+            self._burgerConfigWindow, 
+            width = 205,
+            height = 40,
+            image = self._lettuceImage,
+            activebackground = Background,
+            highlightthickness = 0,
+            borderwidth = 0,
+            command= lambda: changeItemChecked("lettuce", photoPath)
+         )
+         self._lettuce.grid(row=3, sticky='w', padx=(20, 0), pady=(10, 0))
+
+         # Sauce 
+         self._sauceImage: tk.PhotoImage = tk.PhotoImage(file=f'{photoPath}CheckedSauce.png', master=self._burgerConfigWindow)
+         self._sauce: tk.Button = tk.Button(
+            self._burgerConfigWindow, 
+            width = 205,
+            height = 40,
+            image = self._sauceImage,
+            activebackground = Background,
+            highlightthickness = 0,
+            borderwidth = 0,
+            command= lambda: changeItemChecked("sauce", photoPath)
+         )
+         self._sauce.grid(row=4, sticky='w', padx=(20, 0), pady=(10, 0))
+
+         # Add Button
+         self._add: tk.Button = tk.Button(
+            self._burgerConfigWindow, 
+            width = 2,
+            height = 1,
+            text = "+",
+            background = self._colors['Background'],
+            activebackground = Background,
+            highlightthickness = 0,
+            borderwidth = 0,
+            font = ('Ariel', 12, 'bold'),
+            foreground = '#FFF8E1',
+            command= lambda: add()
+         )
+         self._add.grid(row=5, sticky='w', padx=(73, 0), pady=(10, 0))
+
+         # Count Tracker
+         self._count: tk.Label = tk.Label(
+            self._burgerConfigWindow, 
+            width = 2,
+            height = 1,
+            text = "1",
+            background = self._colors['Background'],
+            highlightthickness = 0,
+            borderwidth = 0,
+            font = ('Ariel', 12, 'bold'),
+            foreground = '#FFF8E1',
+         )
+         self._count.grid(row=5, sticky='w', padx=(110, 0), pady=(10, 0))
+
+         # Subtract Button
+         self._subtract: tk.Button = tk.Button(
+            self._burgerConfigWindow, 
+            width = 2,
+            height = 1,
+            text = "-",
+            background = self._colors['Background'],
+            activebackground = Background,
+            highlightthickness = 0,
+            borderwidth = 0,
+            font = ('Ariel', 15, 'bold'),
+            foreground = '#FFF8E1',
+            command= lambda: subtract()
+         )
+         self._subtract.grid(row=5, sticky='w', padx=(144, 0), pady=(10, 0))
+
+         if self._mode == "light":
+            self._add.configure(background=Background, fg=self._colors['Background'])
+            self._count.configure(background=Background, fg=self._colors['Background'])
+            self._subtract.configure(background=Background, fg=self._colors['Background'])
+
+         # Cancel Button
+         self._cancelImage: tk.PhotoImage = tk.PhotoImage(file='assets/CancelItem.png', master=self._burgerConfigWindow)
+         self._cancelItem: tk.Button = tk.Button(
+            self._burgerConfigWindow, 
+            width = 92,
+            height = 40,
+            background='#FFF8E1',
+            image = self._cancelImage,
+            activebackground = Background,
+            highlightthickness = 0,
+            borderwidth = 0,
+            command = lambda: self.cancelItem()
+         )
+         self._cancelItem.grid(row=6, sticky='w', padx=(20, 0), pady=(10, 0))
+
+         # Add To Order Button
+         self._addToOrderImage: tk.PhotoImage = tk.PhotoImage(file='assets/AddItem.png', master=self._burgerConfigWindow)
+         self._addToOrder: tk.Button = tk.Button(
+            self._burgerConfigWindow, 
+            width = 92,
+            height = 40,
+            background='#FFF8E1',
+            image = self._addToOrderImage,
+            activebackground = Background,
+            highlightthickness = 0,
+            borderwidth = 0,
+            command = lambda: self.addBurgerToOrder(burgertype, self._itemCount)
+         )
+         self._addToOrder.grid(row=6, sticky='w', padx=(133, 0), pady=(10, 0))
+
+         # Function used to give checked and unchecked effect
+         def changeItemChecked(item: str, path: str):
+            match item:
+               case "onions":
+                  if self._onions:
+                     self._onions = False
+                     self._onionsImage.configure(file=f'{path}Onions.png')
+                  else:
+                     self._onions = True
+                     self._onionsImage.configure(file=f'{path}CheckedOnions.png')
+               
+               case "tomatos":
+                  if self._tomatos:
+                     self._tomatos = False
+                     self._tomatosImage.configure(file=f'{path}Tomatos.png')
+                  else:
+                     self._tomatos = True
+                     self._tomatosImage.configure(file=f'{path}CheckedTomatos.png')
+               
+               case "lettuce":
+                  if self._lettuce:
+                     self._lettuce = False
+                     self._lettuceImage.configure(file=f'{path}Lettuce.png')
+                  else:
+                     self._lettuce = True
+                     self._lettuceImage.configure(file=f'{path}CheckedLettuce.png')
+
+               case "sauce":
+                  if self._sauce:
+                     self._sauce = False
+                     self._sauceImage.configure(file=f'{path}Sauce.png')
+                  else:
+                     self._sauce = True
+                     self._sauceImage.configure(file=f'{path}CheckedSauce.png')
+         
+         def add():
+            if self._itemCount + 1 <= 10:
+               self._itemCount += 1
+               self._count.configure(text=f'{self._itemCount}')
+            else:
+               messagebox.showerror("Item Count Error", "You may only order a maximum of 10 per item. Sorry for the inconvience.")
+         
+         def subtract():
+            if self._itemCount - 1 > 0:
+               self._itemCount -= 1
+               self._count.configure(text=f'{self._itemCount}')
+            else:
+               messagebox.showerror("Item Count Error", "You must order at minimum 1 per item to add item to order.")
+
+
+         self._burgerConfigWindow.mainloop()
       
-      self._burgerConfigWindow = tk.Tk()
-
-      # Window Config
-      self._burgerConfigWindow.geometry("250x550")
-      self._burgerConfigWindow.title("")
-      self._burgerConfigWindow.iconbitmap('assets/companyLogo.ico')
-      self._burgerConfigWindow.resizable(False, False)
-
-      if self._mode == 'dark':
-         photoPath: str = 'assets/darkmode/'
-         Background = self._colors['Background']
-         self._burgerConfigWindow.configure(background=Background)
-      else: 
-         photoPath: str = 'assets/lightmode/'
-         Background = '#FFF8E1'
-         self._burgerConfigWindow.configure(background=Background)
-
-      
-      # Burger Image 
-      self._burgerImage: tk.PhotoImage = tk.PhotoImage(file=f'assets/burgers/{burgertype}.png', master=self._burgerConfigWindow)
-      self._burgerItem: tk.Label = tk.Label(
-         self._burgerConfigWindow, 
-         image=self._burgerImage,
-         height = 225,
-         width = 210,
-         border = 0
-      )
-      self._burgerItem.grid(row = 0, sticky='w', padx=(20, 0), pady=(10, 0))
-
-      self._onionsImage: tk.PhotoImage = tk.PhotoImage(file=f'{photoPath}CheckedOnions.png', master=self._burgerConfigWindow)
-      self._onions: tk.Button = tk.Button(
-         self._burgerConfigWindow, 
-         width = 205,
-         height = 40,
-         image = self._onionsImage,
-         activebackground = Background,
-         highlightthickness = 0,
-         borderwidth = 0,
-          command= lambda: changeItemChecked("onions", photoPath)
-      )
-      self._onions.grid(row=1, sticky='w', padx=(20, 0), pady=(20, 0))
-
-      self._tomatosImage: tk.PhotoImage = tk.PhotoImage(file=f'{photoPath}CheckedTomatos.png', master=self._burgerConfigWindow)
-      self._tomatos: tk.Button = tk.Button(
-         self._burgerConfigWindow, 
-         width = 205,
-         height = 40,
-         image = self._tomatosImage,
-         activebackground = Background,
-         highlightthickness = 0,
-         borderwidth = 0,
-         command= lambda: changeItemChecked("tomatos", photoPath)
-      )
-      self._tomatos.grid(row=2, sticky='w', padx=(20, 0), pady=(10, 0))
-
-      self._lettuceImage: tk.PhotoImage = tk.PhotoImage(file=f'{photoPath}CheckedLettuce.png', master=self._burgerConfigWindow)
-      self._lettuce: tk.Button = tk.Button(
-         self._burgerConfigWindow, 
-         width = 205,
-         height = 40,
-         image = self._lettuceImage,
-         activebackground = Background,
-         highlightthickness = 0,
-         borderwidth = 0,
-          command= lambda: changeItemChecked("lettuce", photoPath)
-      )
-      self._lettuce.grid(row=3, sticky='w', padx=(20, 0), pady=(10, 0))
-
-      self._sauceImage: tk.PhotoImage = tk.PhotoImage(file=f'{photoPath}CheckedSauce.png', master=self._burgerConfigWindow)
-      self._sauce: tk.Button = tk.Button(
-         self._burgerConfigWindow, 
-         width = 205,
-         height = 40,
-         image = self._sauceImage,
-         activebackground = Background,
-         highlightthickness = 0,
-         borderwidth = 0,
-          command= lambda: changeItemChecked("sauce", photoPath)
-      )
-      self._sauce.grid(row=4, sticky='w', padx=(20, 0), pady=(10, 0))
-
-      self._add: tk.Button = tk.Button(
-         self._burgerConfigWindow, 
-         width = 2,
-         height = 1,
-         text = "+",
-         background = self._colors['Background'],
-         activebackground = Background,
-         highlightthickness = 0,
-         borderwidth = 0,
-         font = ('Ariel', 12, 'bold'),
-         foreground = '#FFF8E1',
-         command= lambda: add()
-      )
-      self._add.grid(row=5, sticky='w', padx=(73, 0), pady=(10, 0))
-
-      self._count: tk.Label = tk.Label(
-         self._burgerConfigWindow, 
-         width = 2,
-         height = 1,
-         text = "1",
-         background = self._colors['Background'],
-         highlightthickness = 0,
-         borderwidth = 0,
-         font = ('Ariel', 12, 'bold'),
-         foreground = '#FFF8E1',
-      )
-      self._count.grid(row=5, sticky='w', padx=(110, 0), pady=(10, 0))
-
-      self._subtract: tk.Button = tk.Button(
-         self._burgerConfigWindow, 
-         width = 2,
-         height = 1,
-         text = "-",
-         background = self._colors['Background'],
-         activebackground = Background,
-         highlightthickness = 0,
-         borderwidth = 0,
-         font = ('Ariel', 15, 'bold'),
-         foreground = '#FFF8E1',
-         command= lambda: subtract()
-      )
-      self._subtract.grid(row=5, sticky='w', padx=(144, 0), pady=(10, 0))
-
-      if self._mode == "light":
-         self._add.configure(background=Background, fg=self._colors['Background'])
-         self._count.configure(background=Background, fg=self._colors['Background'])
-         self._subtract.configure(background=Background, fg=self._colors['Background'])
-
-      self._cancelImage: tk.PhotoImage = tk.PhotoImage(file='assets/CancelItem.png', master=self._burgerConfigWindow)
-      self._cancelItem: tk.Button = tk.Button(
-         self._burgerConfigWindow, 
-         width = 92,
-         height = 40,
-         background='#FFF8E1',
-         image = self._cancelImage,
-         activebackground = Background,
-         highlightthickness = 0,
-         borderwidth = 0,
-         command = lambda: self.cancelItem()
-      )
-      self._cancelItem.grid(row=6, sticky='w', padx=(20, 0), pady=(10, 0))
-
-      self._addToOrderImage: tk.PhotoImage = tk.PhotoImage(file='assets/AddItem.png', master=self._burgerConfigWindow)
-      self._addToOrder: tk.Button = tk.Button(
-         self._burgerConfigWindow, 
-         width = 92,
-         height = 40,
-         background='#FFF8E1',
-         image = self._addToOrderImage,
-         activebackground = Background,
-         highlightthickness = 0,
-         borderwidth = 0,
-         command = lambda: self.addBurgerToOrder(burgertype, self._itemCount)
-      )
-      self._addToOrder.grid(row=6, sticky='w', padx=(133, 0), pady=(10, 0))
-
-      def changeItemChecked(item: str, path: str):
-         match item:
-            case "onions":
-               if self._onions:
-                  self._onions = False
-                  self._onionsImage.configure(file=f'{path}Onions.png')
-               else:
-                  self._onions = True
-                  self._onionsImage.configure(file=f'{path}CheckedOnions.png')
-            
-            case "tomatos":
-               if self._tomatos:
-                  self._tomatos = False
-                  self._tomatosImage.configure(file=f'{path}Tomatos.png')
-               else:
-                  self._tomatos = True
-                  self._tomatosImage.configure(file=f'{path}CheckedTomatos.png')
-            
-            case "lettuce":
-               if self._lettuce:
-                  self._lettuce = False
-                  self._lettuceImage.configure(file=f'{path}Lettuce.png')
-               else:
-                  self._lettuce = True
-                  self._lettuceImage.configure(file=f'{path}CheckedLettuce.png')
-
-            case "sauce":
-               if self._sauce:
-                  self._sauce = False
-                  self._sauceImage.configure(file=f'{path}Sauce.png')
-               else:
-                  self._sauce = True
-                  self._sauceImage.configure(file=f'{path}CheckedSauce.png')
-      
-      def add():
-         if self._itemCount + 1 <= 10:
-            self._itemCount += 1
-            self._count.configure(text=f'{self._itemCount}')
-         else:
-            messagebox.showerror("Item Count Error", "You may only order a maximum of 10 per item. Sorry for the inconvience.")
-      
-      def subtract():
-         if self._itemCount - 1 > 0:
-            self._itemCount -= 1
-            self._count.configure(text=f'{self._itemCount}')
-         else:
-            messagebox.showerror("Item Count Error", "You must order at minimum 1 per item to add item to order.")
-
-
-      self._burgerConfigWindow.mainloop()
-
+   # Function is used to prepare bruger order to be passed to the addItemToOrder function
    def addBurgerToOrder(self, burgerName, burgerCount):
       order = ''
 
@@ -825,15 +845,19 @@ class OrderMenu:
          order += 's'
 
       self._burgerConfigWindow.destroy()
+      self._itemWindowOpen = False
       self.addItemToOrder(burgerName, order, burgerCount)
       
 
+   # Function used to cancel ordering a burger
    def cancelItem(self):
       response = messagebox.askyesno("Cancel", "Are you sure you want to cancel?")
 
       if response:
          self._burgerConfigWindow.destroy()
+         self._itemWindowOpen = False
    
+   # Function used to cancel entire order 
    def cancelOrder(self):
       response = messagebox.askyesno("Cancel Order", "Are you sure you want to cancel this order and start over?")
 
@@ -846,6 +870,7 @@ class OrderMenu:
 
          self._orderItemCount = 0
 
+   # Function used to write the order to the order log
    def placeOrder(self):
       self._orderCount += 1
 
@@ -864,10 +889,3 @@ class OrderMenu:
       self._price.configure(text=f'Total: ${self._orderTotal:.2f}')
 
       self._orderItemCount = 0
-
-
-def main():
-   menu: OrderMenu = OrderMenu()
-
-if __name__ == '__main__':
-   main()
